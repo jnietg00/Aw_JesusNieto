@@ -44,9 +44,16 @@ public class AddAuthorizedFormController {
     	String name = addAuthorized.getName();
     	logger.info("name by" + name);
     	
-    	Person person = new Person(dniNumber, dniLetter, name);
+    	int idAccount = addAuthorized.getIdAccount();
+    	logger.info("idAccount by" + idAccount);   	
     	
-    	accountManager.addAuthorized(person);
+    	Person person = new Person();
+    	person.setDniLetter(dniLetter);
+    	person.setDniNumber(dniNumber);
+    	//person.setAccount();
+    	person.setName(name);
+    	
+    	accountManager.addAuthorized(person, idAccount);
 
 
     	return "redirect:/hello.htm";

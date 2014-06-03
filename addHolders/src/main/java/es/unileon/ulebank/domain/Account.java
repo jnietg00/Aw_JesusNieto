@@ -1,10 +1,15 @@
 package es.unileon.ulebank.domain;
 
-import java.util.ArrayList;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.Table;
 
 //import es.unileon.ulebank.office.Office;
 //import es.unileon.ulebank.bank.Bank;
@@ -23,6 +28,9 @@ import java.util.List;
  *
  * @author runix
  */
+
+@Entity
+@Table(name="account") 
 public class Account implements Serializable{
 
 //    /**
@@ -50,7 +58,18 @@ public class Account implements Serializable{
     /**
      * The account authorizeds
      */
-    private List<Client> authorizeds;
+    //private List<Client> authorizeds;
+    
+    @Id
+    @Column(name = "idAccount")
+    //@GeneratedValue(strategy = GenerationType.AUTO)
+    private int idAccount;
+    
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "idAccount", nullable = false)
+    List<Person> authorizeds;
+    
+    private static final long serialVersionUID = 1L;
 //    /**
 //     * The history of the account
 //     */
@@ -78,8 +97,9 @@ public class Account implements Serializable{
 //    private ArrayList<Card> cards;
     
     	public Account() {
-    		authorizeds = new ArrayList<Client>();
+    		//authorizeds = new ArrayList<Client>();
     	}
+
 
 //    /**
 //     * Create a new account
@@ -210,22 +230,22 @@ public class Account implements Serializable{
 //     *
 //     * @return ( true if success, else false )
 //     */
-    public boolean addAuthorized(Client authorized) {
-        boolean found = false;
-        int i = 0;
-        while (i < this.authorizeds.size() && !found) {
-            if (this.authorizeds.get(i++).getId().compareTo(authorized.getId()) == 0) {
-                found = true;
-            }
-        }
-        if (!found) {
-   //         LOG.info(("Add new authorized " + authorized.getId()));
-            this.authorizeds.add(authorized);
-        } else {
-   //         LOG.error("Cannot add the authorized " + authorized.getId().toString() + " , the authorized already exists");
-        }
-        return !found;
-    }
+//    public boolean addAuthorized(Client authorized) {
+//        boolean found = false;
+//        int i = 0;
+//        while (i < this.authorizeds.size() && !found) {
+//            if (this.authorizeds.get(i++).getId().compareTo(authorized.getId()) == 0) {
+//                found = true;
+//            }
+//        }
+//        if (!found) {
+//   //         LOG.info(("Add new authorized " + authorized.getId()));
+//            this.authorizeds.add(authorized);
+//        } else {
+//   //         LOG.error("Cannot add the authorized " + authorized.getId().toString() + " , the authorized already exists");
+//        }
+//        return !found;
+//    }
 //
 //    /**
 //     *
@@ -270,12 +290,28 @@ public class Account implements Serializable{
      * @return ( the authorizeds )
      */
   
-    public List<Client> getAuthorizeds() {
-        return this.authorizeds;
-    }
-
+//    public List<Client> getAuthorizeds() {
+//        return this.authorizeds;
+//    }
+//
+//    
+//    public void setAuthorizeds(List<Client> authorizeds) {
+//    	this.authorizeds = authorizeds;
+//    }
     
-    public void setAuthorizeds(List<Client> authorizeds) {
+    public int getIdAccount() {
+    	return this.idAccount;
+    }
+    
+    public void setIdAccount(int idAccount) {
+    	this.idAccount = idAccount;
+    }
+    
+    public List<Person> getAuthorizeds() {
+    	return this.authorizeds;
+    }
+    
+    public void setAuthorizeds(List<Person> authorizeds) {
     	this.authorizeds = authorizeds;
     }
 //    /**

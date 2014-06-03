@@ -9,100 +9,78 @@ import org.junit.Before;
 import org.junit.Test;
 
 import es.unileon.ulebank.domain.Account;
-import es.unileon.ulebank.domain.Client;
-import es.unileon.ulebank.domain.Handler;
 import es.unileon.ulebank.domain.MalformedHandlerException;
 import es.unileon.ulebank.domain.Person;
 import es.unileon.ulebank.domain.PersonHandler;
+import es.unileon.ulebank.repository.AccountDao;
+import es.unileon.ulebank.repository.InMemoryAccountDao;
 
 public class SimpleAccountManagerTests {
 	
-	private Account account;
 	
 	private SimpleAccountManager accountManager;
-	private SimpleAccountManager accountManager2;
-	
-	private List<Client> authorizeds;
-	
-	private static int ACCOUNT_COUNT = 2;
-	
+	private AccountDao accountDao;	
 	private Person person1;
-	
-	private int dniNumber1 = 71519821;
-	private char dniLetter1 = 'x';
-	private String name1 = "jesus";
-	
-	private int dniNumber2 = 71463171;
-	private char dniLetter2 = 'd';
-	private String name2 = "alicia"; 
-	
+	private Person person2;
+	private Account account;
+	private List<Person> authorizedList;
+	private List<Account> accountList;
+		
 	PersonHandler id1;
 	PersonHandler id2;
 	
 	@Before
 	public void setUp() throws Exception {
 		
-		
-		account = new Account();
 		accountManager = new SimpleAccountManager();
 
-		person1 = new Person(dniNumber1, dniLetter1, name1);		
+		account = new Account();
+		account.setIdAccount(12345);
+		person1 = new Person();	
+		person1.setDniLetter('x');
+		person1.setDniNumber(71519821);
+		person1.setName("jesus");
+		person1.setAccount(account);
 		
-		authorizeds = new ArrayList<Client>();
+		authorizedList = new ArrayList<Person>() ;
+		authorizedList.add(person1);
 		
-		authorizeds.add(person1);
-	
-		accountManager.setAccount(account);
-		account.setAuthorizeds(authorizeds);
+		accountList = new ArrayList<Account>();
+		accountList.add(account);
+		
+		account.setAuthorizeds(authorizedList);
+			
+		accountDao = new InMemoryAccountDao(null, accountList);
+		accountManager.setAccountDao(accountDao);
+		
 	}
 
 	@Test
 	public void testGetAuthorizedsWithNoAuthorizeds() {
-		accountManager = new SimpleAccountManager();
-		authorizeds = new ArrayList<Client>();
-		accountManager.setAccount(account);
-		account.setAuthorizeds(authorizeds);
-		assertEquals(accountManager.getAuthorizeds().size(), 0);
+		assertNull(accountManager.getAuthorizeds());
 	}
 	
 	@Test
 	public void testGetAuthorizeds() throws MalformedHandlerException {
-		Person person2 = new Person(dniNumber2, dniLetter2, name2);	
-		authorizeds.add(person2);
-		List<Client> authorizeds = accountManager.getAuthorizeds();
-		assertNotNull(authorizeds);
-		assertEquals(ACCOUNT_COUNT, accountManager.getAuthorizeds().size());
-		
-		Client client = authorizeds.get(0);
-		id1 = new PersonHandler(dniNumber1, dniLetter1);
-		assertEquals(id1.compareTo(client.getId()), 0);
-		
-		client = authorizeds.get(1);
-		id2 = new PersonHandler(dniNumber2, dniLetter2);
-		assertEquals(id2.compareTo(client.getId()), 0);
+			
+		accountDao = new InMemoryAccountDao(authorizedList, accountList);
+		accountManager.setAccountDao(accountDao);
+		assertEquals(1, accountManager.getAuthorizeds().size());
 	}
 	
 	@Test
 	public void testAddAuthorized () throws MalformedHandlerException {
-		Person person2 = new Person(dniNumber2, dniLetter2, name2);	
-		assertNotNull(accountManager.getAuthorizeds());
-		assertEquals(accountManager.getAuthorizeds().size(), 1);
-		accountManager.addAuthorized(person2);
-		assertEquals(accountManager.getAuthorizeds().size(), 2);
-		Client client = accountManager.getAuthorizeds().get(0);
-		id1 = new PersonHandler(dniNumber1, dniLetter1);
-		assertEquals(id1.compareTo(client.getId()), 0);
+		
+		accountDao = new InMemoryAccountDao(authorizedList, accountList);
+		accountManager.setAccountDao(accountDao);
+		
+		person2 = new Person();	
+		person2.setDniLetter('d');
+		person2.setDniNumber(71463171);
+		person2.setName("alicias");
+		person2.setAccount(account);
+		
+		accountManager.addAuthorized(person2, account.getIdAccount());
+		assertEquals(2, accountManager.getAuthorizeds().size());		
 	}
-	
-	@Test (expected = AssertionError.class) 
-	public void testAddAuthorizedWithNullListOfAuthorizeds() {
-		try {
-			accountManager = new SimpleAccountManager();
-			accountManager.addAuthorized(person1);
-		} catch (NullPointerException ex) {
-			fail("Account list null");
-		}
-	}
-	
-
 }

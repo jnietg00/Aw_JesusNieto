@@ -7,7 +7,6 @@ import es.unileon.ulebank.domain.Account;
 import es.unileon.ulebank.domain.Handler;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  *Class tha provides the basic gestion data of a client in a bank
@@ -31,6 +30,11 @@ public class Client {
      * 
      * @param clientHandler 
      */
+    
+    public Client() {
+    	
+    }
+    
     public Client(Handler clientHandler){
         accounts = new ArrayList<Account>();
         this.id=clientHandler;

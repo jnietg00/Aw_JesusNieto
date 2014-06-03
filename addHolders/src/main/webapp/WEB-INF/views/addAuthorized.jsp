@@ -43,6 +43,15 @@
 				<td width = "60%">
 				</td>
 		</tr>	
+		
+		<tr>
+			<td align = "right" width = "20%"> Identificador de cuenta : </td>
+				<td width = "20%">
+					<form:input path = "idAccount"/>
+				</td>
+				<td width = "40%">
+				</td>
+		</tr>	
 	</table>
 	<br>
 	<input type = "submit" value = "Execute">

@@ -1,7 +1,5 @@
 package es.unileon.ulebank.service;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,6 +12,7 @@ public class AddAuthorized {
     private int dniNumber;
     private char dniLetter;
     private String name;
+    private int idAccount;
     
     public void setDniNumber (int i) {
     	dniNumber = i;
@@ -40,6 +39,14 @@ public class AddAuthorized {
     
     public String getName() {
     	return name;
+    }
+    
+    public int getIdAccount() {
+    	return idAccount;
+    }
+    
+    public void setIdAccount(int idAccount) {
+    	this.idAccount = idAccount;
     }
 
 }
